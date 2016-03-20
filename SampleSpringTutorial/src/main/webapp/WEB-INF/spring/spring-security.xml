@@ -1,0 +1,29 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                        http://www.springframework.org/schema/security 
+                        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<http auto-config="true" use-expressions="false" >
+		<!-- If use use-expressions="true" , use access= hasRole('ROLE_USER') as 
+			it evaluates boolean of having specified role for the user. -->
+			<access-denied-handler error-page="/oops"/>
+		<intercept-url pattern="/admin*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/" access="ROLE_USER" />
+		<!-- Customization of diff pages -->
+		<form-login authentication-failure-url="/login?error"
+			login-processing-url="/login" />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="test" password="123456" authorities="ROLE_USER" />
+				<user name="admin" password="admin" authorities="ROLE_ADMIN,ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
