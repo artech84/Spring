@@ -8,13 +8,23 @@
 	<http auto-config="true" use-expressions="false" >
 		<!-- If use use-expressions="true" , use access= hasRole('ROLE_USER') as 
 			it evaluates boolean of having specified role for the user. -->
-			<access-denied-handler error-page="/oops"/>
+		<access-denied-handler error-page="/oops"/>
+		
 		<intercept-url pattern="/admin*" access="ROLE_ADMIN" />
 		<intercept-url pattern="/resources/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<intercept-url pattern="/" access="ROLE_USER" />
-		<!-- Customization of diff pages -->
-		<form-login authentication-failure-url="/login?error"
-			login-processing-url="/login" />
+		<intercept-url pattern="/user*" access="ROLE_USER" />
+		
+		<!-- Customization of login pages -->
+		<form-login login-page="/login" 
+			default-target-url="/welcome"
+			authentication-failure-url="/login?error" 
+			login-processing-url="/j_spring_security_check" 
+			username-parameter="username"
+			password-parameter="password"/>	
+					
+		<logout logout-success-url="/welcome?logout" />
+		
+		<csrf/>
 	</http>
 
 	<authentication-manager>

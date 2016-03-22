@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -20,22 +21,37 @@ public class LoginController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView home() {
-		logger.info("Welcome home! ");
+	
+	@RequestMapping(value = {"/","/welcome**"}, method = RequestMethod.GET)
+	public ModelAndView home(
+			@RequestParam(value = "logout", required = false) String logout) {
+		logger.info("Welcome ! ");
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", "Spring Security Hello World");
-		model.addObject("message", "This is welcome page!");
+		model.addObject("message", "This is welcome page guest!");
+		if (logout != null) {
+			model.addObject("logoutMsg", "You've been logged out successfully.");
+		}
 		model.setViewName("welcome");
 		return model;
 	}
 	
-	@RequestMapping(value = "/admin*", method = RequestMethod.GET)
-	public ModelAndView homeAdmin() {
-		logger.info("Welcome home! ");
+	@RequestMapping(value = "/user*", method = RequestMethod.GET)
+	public ModelAndView homeUser(Principal user) {
+		logger.info("Welcome home! "+user.getName());
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", "Spring Security Hello World");
-		model.addObject("message", "This is welcome page for Admin!");
+		model.addObject("message", "This is welcome page "+user.getName()+"!");
+		model.setViewName("welcomeUser");
+		return model;
+	}
+	
+	@RequestMapping(value = "/admin*", method = RequestMethod.GET)
+	public ModelAndView homeAdmin(Principal user) {
+		logger.info("Welcome home! "+user.getName());
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Spring Security Hello World");
+		model.addObject("message", "This is welcome page for Admin "+user.getName()+" !!");
 		model.setViewName("welcomeAdmin");
 		return model;
 	}
@@ -54,6 +70,21 @@ public class LoginController {
 		}
 
 		model.setViewName("/error_pages/403");
+		return model;
+
+	}
+	
+	@RequestMapping(value = "/login" , method = RequestMethod.GET)
+	public ModelAndView login(
+		@RequestParam(value = "error", required = false) String error) {
+
+		ModelAndView model = new ModelAndView();
+		if (error != null) {
+			model.addObject("error", "Invalid creadential! Try again.");
+		}
+
+		model.setViewName("login");
+
 		return model;
 
 	}
