@@ -152,6 +152,15 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
+		<dependency>
+         <groupId>ReviewWebserviceClient</groupId>
+         <artifactId>ReviewWebserviceClient</artifactId>
+         <scope>system</scope>
+         <version>1.0</version>
+         <systemPath>${basedir}\src\main\lib\ReviewWebserviceClient.jar</systemPath>
+      </dependency>
+		
 	<dependency>
 		<groupId>commons-logging</groupId>
 		<artifactId>commons-logging-api</artifactId>
